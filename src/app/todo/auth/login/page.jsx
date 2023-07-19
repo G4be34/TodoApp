@@ -1,12 +1,12 @@
 import React from "react"
 import styles from "./page.module.css"
 
-const Contact = () => {
+const Login = () => {
   return (
     <div className={styles.container}>
-      Contact
+      Login
     </div>
   )
 }
 
-export default Contact;
+export default Login;
