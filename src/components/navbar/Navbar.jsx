@@ -29,6 +29,7 @@ const links = [
 
 const Navbar = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+
   return (
     <div className={styles.container}>
       <Link href={"/"} className={styles.logo}>Todo App</Link>
@@ -38,8 +39,8 @@ const Navbar = () => {
           <Link key={link.id} href={link.url} className={styles.link}>{link.title}</Link>
         ))}
         {loggedIn
-          ? <button className={styles.button}>Logout</button>
-          : <button className={styles.button}>Login</button>}
+          ? <button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Logout</button>
+          : <button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Login</button>}
       </div>
     </div>
   )
