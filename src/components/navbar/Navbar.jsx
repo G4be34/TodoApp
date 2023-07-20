@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import styles from "./navbar.module.css"
 import Link from "next/link"
+import DarkModeToggle from "../DarkModeToggle/DarkModeToggle"
 
 const links = [
   {
@@ -34,7 +35,7 @@ const Navbar = () => {
     <div className={styles.container}>
       <Link href={"/"} className={styles.logo}>Todo App</Link>
       <div className={styles.links}>
-        <div>Dark Mode</div>
+        <DarkModeToggle/>
         {links.map(link => (
           <Link key={link.id} href={link.url} className={styles.link}>{link.title}</Link>
         ))}
