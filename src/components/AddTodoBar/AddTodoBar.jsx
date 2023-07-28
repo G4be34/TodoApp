@@ -14,9 +14,9 @@ const AddTodoBar = () => {
   };
 
   return (
-    <form>
-      <input type="text" placeholder="Add a new Todo" />
-      <button>Add</button>
+    <form onSubmit={handleAdd} className={styles.form}>
+      <input type="text" placeholder="Add a new Todo" className={styles.input} />
+      <button className={styles.button}>Add</button>
     </form>
   );
 }

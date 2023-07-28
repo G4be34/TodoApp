@@ -1,3 +1,38 @@
 .container {
+  display: flex;
+  justify-content: space-between;
+}
 
+.sortContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort {
+  margin-right: 5px;
+}
+
+.options {
+  padding: 3px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-family: inherit;
+}
+
+.listContainer {
+  height: 700px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.listContainer::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.label {
+  font-size: 30px;
+  font-weight: bold;
 }

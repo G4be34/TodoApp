@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  width: 550px;
+  border: 2px solid #bbb;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 30px 10px 30px 0;
+  position: relative;
+  align-items: center;
+}
+
+.info{
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  margin-left: 30px;
+}
+
+.desc {
+  flex: 1;
+}
+
+.delete {
+  border-radius: 50%;
+  padding: 5px 7px;
+  position: absolute;
+  left: 98%;
+  top: -15px;
+  cursor: pointer;
+  border: none;
+}
+
+.complete {
+  padding: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #53c28b;
+  border: none;
+  color: white;
+}
+
+.date {
+  margin-left: auto;
+}

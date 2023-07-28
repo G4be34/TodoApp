@@ -1,6 +1,7 @@
 import React from "react"
 import styles from "./page.module.css"
 import AddTodoBar from "@/components/AddTodoBar/AddTodoBar";
+import TodoItem from "@/components/TodoItem/TodoItem";
 
 export const metadata = {
   title: 'Todo App Todos',
@@ -10,75 +11,133 @@ export const metadata = {
 const todos = [
   {
     id: 1,
-    date: 1,
-    desc: "Do the laundry"
+    important: true,
+    date: "2023-07-10",
+    description: "Do the laundry",
+    completedDate: "",
+    completed: false
   },
   {
     id: 2,
-    date: 1,
-    desc: "Take the trash out"
+    important: false,
+    date: "2023-06-10",
+    description: "Take the trash out",
+    completedDate: "",
+    completed: false
   },
   {
     id: 3,
-    date: 1,
-    desc: "Finish your favorite TV series"
+    important: false,
+    date: "2022-07-05",
+    description: "Finish your favorite TV series",
+    completedDate: "",
+    completed: false
   },
   {
     id: 4,
-    date: 1,
-    desc: "Wash the dishes"
+    important: true,
+    date: "2023-07-16",
+    description: "Wash the dishes",
+    completedDate: "",
+    completed: false
   },
   {
     id: 5,
-    date: 1,
-    desc: "Vacuum the carpet"
+    important: false,
+    date: "2023-07-17",
+    description: "Vacuum the carpet",
+    completedDate: "",
+    completed: false
   },
   {
     id: 6,
-    date: 1,
-    desc: "Feed the dog"
+    important: false,
+    date: "2023-05-10",
+    description: "Feed the dog",
+    completedDate: "",
+    completed: false
   },
   {
     id: 7,
-    date: 1,
-    desc: "Get some yummy foods"
+    important: true,
+    date: "2023-07-12",
+    description: "Get some yummy foods",
+    completedDate: "",
+    completed: false
+  },
+  {
+    id: 11,
+    important: true,
+    date: "2023-07-12",
+    description: "This is just a test just to see how many words I can fit within this text box",
+    completedDate: "",
+    completed: false
   },
 ];
 
 const completed = [
   {
-    id: 1,
-    desc: "Go to the grocery store"
+    id: 8,
+    completed: true,
+    date: "2023-05-17",
+    important: false,
+    description: "Go to the grocery store",
+    completedDate: "2023-05-20"
   },
   {
-    id: 2,
-    desc: "See a therapist"
+    id: 9,
+    completed: true,
+    date: "2023-07-17",
+    important: false,
+    description: "See a therapist",
+    completedDate: "2023-07-18"
   },
   {
-    id: 3,
-    desc: "Pet the dog"
+    id: 10,
+    completed: true,
+    date: "2023-06-17",
+    important: false,
+    description: "Pet the dog",
+    completedDate: "2023-06-25"
   }
 ];
 
 const Todo = () => {
 
   return (
-    <div className={styles.container}>
+    <div className={styles.mainContainer}>
       <AddTodoBar />
-      <div>
-        <div>
-          <div>
-            <span>Your Todos</span>
-            <span>Sort By: </span>
-            <select>
-              <option>Date</option>
-              <option>Importance</option>
-            </select>
+      <div className={styles.container}>
+        <div className={styles.uncompleted}>
+          <div className={styles.sortContainer}>
+            <span className={styles.label}>Your Todos</span>
+            <div className={styles.optionContainer}>
+              <span className={styles.sort}>Sort By: </span>
+              <select className={styles.options}>
+                <option>Newest</option>
+                <option>Oldest</option>
+                <option>Importance</option>
+              </select>
+            </div>
           </div>
-
+          <ul className={styles.listContainer}>
+            {todos?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+          </ul>
         </div>
-        <div>
-
+        <div className={styles.completed}>
+          <div className={styles.sortContainer}>
+            <span className={styles.label}>Completed</span>
+            <div className={styles.optionContainer}>
+              <span className={styles.sort}>Sort By: </span>
+              <select className={styles.options}>
+                <option>Date Completed</option>
+                <option>Date Added</option>
+              </select>
+            </div>
+          </div>
+          <ul className={styles.listContainer}>
+            {completed?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+          </ul>
         </div>
       </div>
     </div>

@@ -40,8 +40,8 @@ const Navbar = () => {
           <Link key={link.id} href={link.url} className={styles.link}>{link.title}</Link>
         ))}
         {loggedIn
-          ? <button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Logout</button>
-          : <button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Login</button>}
+          ? <Link href={"/"}><button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Logout</button></Link>
+          : <Link href={"todo/login"}><button className={styles.button} onClick={() => setLoggedIn(!loggedIn)}>Login</button></Link>}
       </div>
     </div>
   )
