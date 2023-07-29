@@ -1,12 +1,12 @@
-import React from "react"
+"use client"
+
+import React, { useEffect } from "react"
 import styles from "./page.module.css"
 import AddTodoBar from "@/components/AddTodoBar/AddTodoBar";
 import TodoItem from "@/components/TodoItem/TodoItem";
-
-export const metadata = {
-  title: 'Todo App Todos',
-  description: 'This is the Todos Page',
-}
+import useSWR from 'swr';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const todos = [
   {
@@ -103,45 +103,64 @@ const completed = [
 ];
 
 const Todo = () => {
+  const session = useSession();
+  const router = useRouter();
 
-  return (
-    <div className={styles.mainContainer}>
-      <AddTodoBar />
-      <div className={styles.container}>
-        <div className={styles.uncompleted}>
-          <div className={styles.sortContainer}>
-            <span className={styles.label}>Your Todos</span>
-            <div className={styles.optionContainer}>
-              <span className={styles.sort}>Sort By: </span>
-              <select className={styles.options}>
-                <option>Newest</option>
-                <option>Oldest</option>
-                <option>Importance</option>
-              </select>
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+  const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${session?.data?.user.name}`, fetcher);
+
+  useEffect(() => {
+    if (session.status === "unauthenticated") {
+      router?.push("/todo/login");
+    }
+  }, [session.status, router]);
+
+  if (session.status === "loading") {
+    return <p>Loading...</p>
+  }
+
+
+  if (session.status === "authenticated") {
+    return (
+      <div className={styles.mainContainer}>
+        <AddTodoBar />
+        <div className={styles.container}>
+          <div className={styles.uncompleted}>
+            <div className={styles.sortContainer}>
+              <span className={styles.label}>Your Todos</span>
+              <div className={styles.optionContainer}>
+                <span className={styles.sort}>Sort By: </span>
+                <select className={styles.options}>
+                  <option>Newest</option>
+                  <option>Oldest</option>
+                  <option>Importance</option>
+                </select>
+              </div>
             </div>
+            <ul className={styles.listContainer}>
+              {todos?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+            </ul>
           </div>
-          <ul className={styles.listContainer}>
-            {todos?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
-          </ul>
-        </div>
-        <div className={styles.completed}>
-          <div className={styles.sortContainer}>
-            <span className={styles.label}>Completed</span>
-            <div className={styles.optionContainer}>
-              <span className={styles.sort}>Sort By: </span>
-              <select className={styles.options}>
-                <option>Date Completed</option>
-                <option>Date Added</option>
-              </select>
+          <div className={styles.completed}>
+            <div className={styles.sortContainer}>
+              <span className={styles.label}>Completed</span>
+              <div className={styles.optionContainer}>
+                <span className={styles.sort}>Sort By: </span>
+                <select className={styles.options}>
+                  <option>Date Completed</option>
+                  <option>Date Added</option>
+                </select>
+              </div>
             </div>
+            <ul className={styles.listContainer}>
+              {completed?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+            </ul>
           </div>
-          <ul className={styles.listContainer}>
-            {completed?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
-          </ul>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default Todo;

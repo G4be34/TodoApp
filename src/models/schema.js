@@ -5,7 +5,7 @@ async function setup() {
     const query2 = `CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       email VARCHAR(100) NOT NULL,
-      user_password VARCHAR(25) NOT NULL,
+      user_password VARCHAR(100) NOT NULL,
       name VARCHAR(30) NOT NULL,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
     );`;
@@ -25,9 +25,10 @@ async function setup() {
     console.log("Database and tables created successfully");
   } catch (error) {
     console.error("Error creating database/tables: ", error);
-  } finally {
-    pool.end();
   }
+  // finally {
+  //   pool.end();
+  // }
 };
 
 setup();
