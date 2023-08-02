@@ -1,6 +1,5 @@
 .container {
   display: flex;
-  width: 550px;
   border: 2px solid #bbb;
   padding: 15px;
   border-radius: 5px;
@@ -37,8 +36,33 @@
   background-color: #53c28b;
   border: none;
   color: white;
+  width: 50%;
 }
 
 .date {
   margin-left: auto;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.important {
+  padding: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #53c28b;
+  border: none;
+  color: white;
+  width: 50%;
+}
+
+.importantLabel {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

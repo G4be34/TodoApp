@@ -6,23 +6,25 @@ export const GET = async (request) => {
   const username = url.searchParams.get("username");
 
   try {
-    const queryString = "SELECT * FROM todos WHERE user_id = $1;";
+    const queryString = "SELECT * FROM todos WHERE username = $1;";
     const value = [username];
 
-    await pool.query(queryString, value);
+    const todos = await pool.query(queryString, value);
 
-    return new NextResponse(JSON.stringify(posts), { status: 200 });
+    return new NextResponse(JSON.stringify(todos.rows), { status: 200 });
   } catch (error) {
     return new NextResponse("Database error", { status: 500 });
   }
 };
 
 export const POST = async (request) => {
-  const body = await request.json();
+  const {newTodo, username } = await request.json();
+  const query = "INSERT INTO todos (completed_date, todo_body, important, username) VALUES ($1, $2, $3, $4);";
+  const values = [null, newTodo, false, username];
 
   try {
-    console.log("This is the body: ", body);
-
+    await pool.query(query, values);
+    return new NextResponse("Todo has been added", { status: 201 });
   } catch (error) {
     return new NextResponse("Database Error", { status: 500 });
   }

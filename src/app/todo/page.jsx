@@ -1,114 +1,40 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import styles from "./page.module.css"
-import AddTodoBar from "@/components/AddTodoBar/AddTodoBar";
 import TodoItem from "@/components/TodoItem/TodoItem";
 import useSWR from 'swr';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const todos = [
-  {
-    id: 1,
-    important: true,
-    date: "2023-07-10",
-    description: "Do the laundry",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 2,
-    important: false,
-    date: "2023-06-10",
-    description: "Take the trash out",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 3,
-    important: false,
-    date: "2022-07-05",
-    description: "Finish your favorite TV series",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 4,
-    important: true,
-    date: "2023-07-16",
-    description: "Wash the dishes",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 5,
-    important: false,
-    date: "2023-07-17",
-    description: "Vacuum the carpet",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 6,
-    important: false,
-    date: "2023-05-10",
-    description: "Feed the dog",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 7,
-    important: true,
-    date: "2023-07-12",
-    description: "Get some yummy foods",
-    completedDate: "",
-    completed: false
-  },
-  {
-    id: 11,
-    important: true,
-    date: "2023-07-12",
-    description: "This is just a test just to see how many words I can fit within this text box",
-    completedDate: "",
-    completed: false
-  },
-];
-
-const completed = [
-  {
-    id: 8,
-    completed: true,
-    date: "2023-05-17",
-    important: false,
-    description: "Go to the grocery store",
-    completedDate: "2023-05-20"
-  },
-  {
-    id: 9,
-    completed: true,
-    date: "2023-07-17",
-    important: false,
-    description: "See a therapist",
-    completedDate: "2023-07-18"
-  },
-  {
-    id: 10,
-    completed: true,
-    date: "2023-06-17",
-    important: false,
-    description: "Pet the dog",
-    completedDate: "2023-06-25"
-  }
-];
 
 const Todo = () => {
   const session = useSession();
   const router = useRouter();
+  const [todos, setTodos] = useState([]);
+  const [completed, setCompleted] = useState([]);
 
   const fetcher = (...args) => fetch(...args).then(res => res.json());
 
   const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${session?.data?.user.name}`, fetcher);
+
+  const sortLists = (list) => {
+    if (list) {
+      const todosList = list.filter(item => {
+        return !item.completed_date;
+      });
+      const completedList = list.filter(item => {
+        return item.completed_date;
+      });
+
+      setTodos(todosList);
+      setCompleted(completedList);
+    }
+  };
+
+  const sortedList = useMemo(() => {
+    return sortLists(data);
+  }, [data]);
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
@@ -120,11 +46,35 @@ const Todo = () => {
     return <p>Loading...</p>
   }
 
+  const handleAdd = async (e) => {
+    e.preventDefault();
+
+    const newTodo = e.target[0].value;
+    try {
+      await fetch("/api/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          newTodo,
+          username: session.data.user.name
+        })
+      });
+      mutate()
+      e.target.reset();
+    } catch (error) {
+      console.log("Error adding new todo: ", error);
+    }
+  };
 
   if (session.status === "authenticated") {
     return (
       <div className={styles.mainContainer}>
-        <AddTodoBar />
+        <form onSubmit={handleAdd} className={styles.form}>
+          <input type="text" placeholder="Add a new Todo" className={styles.input} />
+          <button className={styles.button}>Add</button>
+        </form>
         <div className={styles.container}>
           <div className={styles.uncompleted}>
             <div className={styles.sortContainer}>
