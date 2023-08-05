@@ -13,7 +13,7 @@ export const GET = async (request) => {
 
     return new NextResponse(JSON.stringify(todos.rows), { status: 200 });
   } catch (error) {
-    return new NextResponse("Database error", { status: 500 });
+    return new NextResponse("Error obtaining todos", { status: 500 });
   }
 };
 
@@ -26,6 +26,42 @@ export const POST = async (request) => {
     await pool.query(query, values);
     return new NextResponse("Todo has been added", { status: 201 });
   } catch (error) {
-    return new NextResponse("Database Error", { status: 500 });
+    return new NextResponse("Error adding todo", { status: 500 });
+  }
+};
+
+export const DELETE = async (request) => {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+  const query = "DELETE FROM todos WHERE id = $1;";
+  const value = [id];
+
+  try {
+    await pool.query(query, value);
+    return new NextResponse("Todo has been deleted", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Error deleting todo from DB", { status: 500 });
+  }
+};
+
+export const PATCH = async (request) => {
+  const url = new URL(request.url);
+  const id = url.searchParams.get("id");
+  let importance = url.searchParams.get("importance");
+  const query = "UPDATE todos SET important = $2 WHERE id = $1;";
+
+  if (importance === "true") {
+    importance = false;
+  } else {
+    importance = true;
+  }
+
+  const value = [id, importance];
+
+  try {
+    await pool.query(query, value);
+    return new NextResponse("Importance has been updated", { status: 201 });
+  } catch (error) {
+    return new NextResponse("Error changing todo importance", { status: 500 });
   }
 };

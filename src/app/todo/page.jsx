@@ -6,6 +6,7 @@ import TodoItem from "@/components/TodoItem/TodoItem";
 import useSWR from 'swr';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 
 const Todo = () => {
@@ -13,27 +14,32 @@ const Todo = () => {
   const router = useRouter();
   const [todos, setTodos] = useState([]);
   const [completed, setCompleted] = useState([]);
+  const [sort, setSort] = useState("newest");
 
   const fetcher = (...args) => fetch(...args).then(res => res.json());
 
   const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${session?.data?.user.name}`, fetcher);
 
-  const sortLists = (list) => {
-    if (list) {
-      const todosList = list.filter(item => {
+  const formatDate = (dateString) => {
+    return format(new Date(dateString), "yyyy-MM-dd");
+  };
+
+  const sortedList = useMemo(() => {
+    if (data) {
+      const todosList = data.filter(item => {
+        const newDate = formatDate(item.date_created);
+        item.date_created = newDate;
         return !item.completed_date;
       });
-      const completedList = list.filter(item => {
+      const completedList = data.filter(item => {
+        const newDate = formatDate(item.date_created);
+        item.date_created = newDate;
         return item.completed_date;
       });
 
       setTodos(todosList);
       setCompleted(completedList);
     }
-  };
-
-  const sortedList = useMemo(() => {
-    return sortLists(data);
   }, [data]);
 
   useEffect(() => {
@@ -44,6 +50,22 @@ const Todo = () => {
 
   if (session.status === "loading") {
     return <p>Loading...</p>
+  }
+
+  const sortList = (e) => {
+    const mode = e.target.value;
+    let newList = [...todos];
+
+    if (mode === "newest") {
+      newList.sort((a, b) => b.date_created - a.date_created);
+    }
+    if (mode === "oldest") {
+      newList.sort((a, b) => a.date_created - b.date_created);
+    }
+    if (mode === "importance") {
+      newList.sort((a, b) => b.importance - a.importance);
+    }
+    setTodos(newList);
   }
 
   const handleAdd = async (e) => {
@@ -81,15 +103,15 @@ const Todo = () => {
               <span className={styles.label}>Your Todos</span>
               <div className={styles.optionContainer}>
                 <span className={styles.sort}>Sort By: </span>
-                <select className={styles.options}>
-                  <option>Newest</option>
-                  <option>Oldest</option>
-                  <option>Importance</option>
+                <select className={styles.options} onChange={sortList}>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                  <option value="importance">Importance</option>
                 </select>
               </div>
             </div>
             <ul className={styles.listContainer}>
-              {todos?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+              {todos?.map(todo => <TodoItem key={todo.id} todo={todo} mutate={mutate} />)}
             </ul>
           </div>
           <div className={styles.completed}>

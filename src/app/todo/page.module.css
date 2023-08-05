@@ -7,6 +7,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 5px;
 }
 
 .sort {
@@ -22,15 +23,25 @@
   font-family: inherit;
 }
 
+.options:focus {
+  outline: none;
+}
+
 .listContainer {
   height: 700px;
   width: 550px;
   overflow-y: auto;
   overflow-x: hidden;
+  padding-right: 5px;
 }
 
 .listContainer::-webkit-scrollbar {
-  background-color: transparent;
+  background-color: inherit;
+}
+
+.listContainer::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 5px;
 }
 
 .label {
@@ -54,6 +65,10 @@
   font-size: 20px;
   border-radius: 5px;
   margin-right: 10px;
+}
+
+.input:focus {
+  outline: none;
 }
 
 .button {

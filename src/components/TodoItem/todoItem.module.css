@@ -19,14 +19,19 @@
   flex: 1;
 }
 
-.delete {
-  border-radius: 50%;
-  padding: 5px 7px;
-  position: absolute;
-  left: 98%;
-  top: -15px;
+.optionsContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.options {
+  color: inherit;
+  background-color: inherit;
   cursor: pointer;
-  border: none;
+  width: fit-content;
+  margin-top: -10px;
 }
 
 .complete {
@@ -65,4 +70,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.menu {
+  position: absolute;
+  top: 20%;
+  right: -10px;
+  border: 1px solid #bbb;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px;
+  z-index: 100;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.buttons {
+  background-color: #53c28b;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
 }
