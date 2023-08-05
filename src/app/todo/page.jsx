@@ -24,7 +24,7 @@ const Todo = () => {
     return format(new Date(dateString), "yyyy-MM-dd");
   };
 
-  const sortedList = useMemo(() => {
+  useEffect(() => {
     if (data) {
       const todosList = data.filter(item => {
         const newDate = formatDate(item.date_created);
@@ -52,18 +52,18 @@ const Todo = () => {
     return <p>Loading...</p>
   }
 
-  const sortList = (e) => {
+  const sortTodosList = (e) => {
     const mode = e.target.value;
     let newList = [...todos];
-
+    console.log("values of newList: ", newList)
     if (mode === "newest") {
-      newList.sort((a, b) => b.date_created - a.date_created);
+      newList.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
     }
     if (mode === "oldest") {
-      newList.sort((a, b) => a.date_created - b.date_created);
+      newList.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
     }
     if (mode === "importance") {
-      newList.sort((a, b) => b.importance - a.importance);
+      newList.sort((a, b) => b.important - a.important);
     }
     setTodos(newList);
   }
@@ -103,7 +103,7 @@ const Todo = () => {
               <span className={styles.label}>Your Todos</span>
               <div className={styles.optionContainer}>
                 <span className={styles.sort}>Sort By: </span>
-                <select className={styles.options} onChange={sortList}>
+                <select className={styles.options} onChange={sortTodosList}>
                   <option value="newest">Newest</option>
                   <option value="oldest">Oldest</option>
                   <option value="importance">Importance</option>

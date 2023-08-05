@@ -26,9 +26,6 @@ async function setup() {
   } catch (error) {
     console.error("Error creating database/tables: ", error);
   }
-  // finally {
-  //   pool.end();
-  // }
 };
 
 setup();
