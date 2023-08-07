@@ -12,7 +12,7 @@ async function setup() {
     const query3 = `CREATE TABLE IF NOT EXISTS todos (
       id SERIAL PRIMARY KEY,
       date_created TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-      completed_date BIGINT,
+      completed_date VARCHAR(30),
       todo_body TEXT NOT NULL,
       important BOOLEAN,
       username VARCHAR(30) NOT NULL,

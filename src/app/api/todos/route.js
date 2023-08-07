@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/utils/db";
+import { format } from "date-fns";
 
 export const GET = async (request) => {
   const url = new URL(request.url);
@@ -48,18 +49,33 @@ export const PATCH = async (request) => {
   const url = new URL(request.url);
   const id = url.searchParams.get("id");
   let importance = url.searchParams.get("importance");
-  const query = "UPDATE todos SET important = $2 WHERE id = $1;";
+  const completedDate = url.searchParams.get("completed");
+  const newTodoBody = url.searchParams.get("body");
+  let query;
+  let values;
 
-  if (importance === "true") {
-    importance = false;
+  if (completedDate) {
+    const newDate = new Date();
+    const formattedDate = format(newDate, "yyyy-MM-dd HH:mm:ss.SSSSSS");
+    query = "UPDATE todos SET completed_date = $1 WHERE id = $2;";
+    values = [formattedDate, id];
+  } else if (newTodoBody) {
+    query = "UPDATE todos SET todo_body = $1 WHERE id = $2;";
+    values = [newTodoBody, id];
   } else {
-    importance = true;
+    query = "UPDATE todos SET important = $2 WHERE id = $1;";
+
+    if (importance === "true") {
+      importance = false;
+    } else {
+      importance = true;
+    }
+
+    values = [id, importance];
   }
 
-  const value = [id, importance];
-
   try {
-    await pool.query(query, value);
+    await pool.query(query, values);
     return new NextResponse("Importance has been updated", { status: 201 });
   } catch (error) {
     return new NextResponse("Error changing todo importance", { status: 500 });

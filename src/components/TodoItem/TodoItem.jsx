@@ -5,10 +5,22 @@ import styles from "./todoItem.module.css"
 
 const TodoItem = ({ todo, mutate }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [newTodo, setNewTodo] = useState(todo.todo_body);
 
-  const handleComplete = () => {
-    console.log("Completed completion of Todo Task");
-  }
+  const handleComplete = async () => {
+    try {
+      await fetch(`/api/todos?id=${todo.id}&completed=true`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      mutate();
+    } catch (error) {
+      console.log("Error completing todo: ", error);
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -22,7 +34,7 @@ const TodoItem = ({ todo, mutate }) => {
     } catch (error) {
       console.log("Error deleting todo: ", error);
     }
-  }
+  };
 
   const addImportance = async () => {
     try {
@@ -36,15 +48,39 @@ const TodoItem = ({ todo, mutate }) => {
     } catch (error) {
       console.log("Error updating todo item importance: ", error);
     }
-  }
+  };
+
+  const editTodo = async () => {
+    setEditMode(false);
+    if (showMenu) {
+      setShowMenu(false);
+    }
+    try {
+      await fetch(`/api/todos?id=${todo.id}&body=${newTodo}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      mutate();
+    } catch (error) {
+      console.log("Error saving new todo edit: ", error);
+    }
+  };
 
   return (
     <li className={styles.container}>
-      <p className={styles.desc}>{todo.todo_body}</p>
+      {editMode
+        ? <div className={styles.editContainer}>
+            <input className={styles.input} type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />
+            <button onClick={editTodo} className={styles.save}>Save</button>
+          </div>
+        : <p className={styles.desc}>{(todo.todo_body[0].toUpperCase()) + (todo.todo_body.slice(1))}</p>
+        }
       <div className={styles.info}>
         {showMenu && (
           <div className={styles.menu}>
-            <button className={styles.buttons}>Edit</button>
+            <button className={styles.buttons} onClick={() => setEditMode(!editMode)}>Edit</button>
             <button className={styles.buttons} onClick={handleDelete}>Delete</button>
           </div>
         )}

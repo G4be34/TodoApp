@@ -94,3 +94,30 @@
   color: white;
   cursor: pointer;
 }
+
+.save {
+  background-color: #53c28b;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+  padding: 7px;
+  margin-left: 5px;
+}
+
+.input {
+  font-size: inherit;
+  font-family: inherit;
+  width: 90%;
+  padding: 3px;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.editContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}

@@ -15,13 +15,17 @@ const Todo = () => {
   const [todos, setTodos] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [sort, setSort] = useState("newest");
+  const [sortCompleted, setSortCompleted] = useState("date completed");
 
   const fetcher = (...args) => fetch(...args).then(res => res.json());
 
   const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${session?.data?.user.name}`, fetcher);
 
   const formatDate = (dateString) => {
-    return format(new Date(dateString), "yyyy-MM-dd");
+    const parsedDate = Date.parse(dateString);
+    if (!isNaN(parsedDate)) {
+      return format(new Date(dateString), "yyyy-MM-dd");
+    }
   };
 
   useEffect(() => {
@@ -32,8 +36,8 @@ const Todo = () => {
         return !item.completed_date;
       });
       const completedList = data.filter(item => {
-        const newDate = formatDate(item.date_created);
-        item.date_created = newDate;
+        const newDate = formatDate(item.completed_date);
+        item.completed_date = newDate;
         return item.completed_date;
       });
 
@@ -55,7 +59,6 @@ const Todo = () => {
   const sortTodosList = (e) => {
     const mode = e.target.value;
     let newList = [...todos];
-    console.log("values of newList: ", newList)
     if (mode === "newest") {
       newList.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
     }
@@ -67,6 +70,20 @@ const Todo = () => {
     }
     setTodos(newList);
   }
+
+  const sortCompletedList = (e) => {
+    const mode = e.target.value;
+    let newList = [...completed];
+
+    if (mode === "date completed") {
+      newList.sort((a, b) => new Date(b.completed_date) - new Date(a.completed_date));
+    }
+    if (mode === "date added") {
+      newList.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+    }
+
+    setCompleted(newList);
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -104,6 +121,7 @@ const Todo = () => {
               <div className={styles.optionContainer}>
                 <span className={styles.sort}>Sort By: </span>
                 <select className={styles.options} onChange={sortTodosList}>
+                  <option>-Select Option-</option>
                   <option value="newest">Newest</option>
                   <option value="oldest">Oldest</option>
                   <option value="importance">Importance</option>
@@ -119,9 +137,10 @@ const Todo = () => {
               <span className={styles.label}>Completed</span>
               <div className={styles.optionContainer}>
                 <span className={styles.sort}>Sort By: </span>
-                <select className={styles.options}>
-                  <option>Date Completed</option>
-                  <option>Date Added</option>
+                <select className={styles.options} onChange={sortCompletedList}>
+                  <option>-Select Option-</option>
+                  <option value="date completed">Date Completed</option>
+                  <option value="date added">Date Added</option>
                 </select>
               </div>
             </div>
