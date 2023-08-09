@@ -1,11 +1,11 @@
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  host: "localhost",
-  user: 'gabrieljimenez',
-  database: "todoapp",
-  password: "familia4eve",
-  port: 5432,
+  host: process.env.HOST,
+  user: process.env.USER,
+  database: process.env.DB,
+  password: process.env.PASSWORD,
+  port: process.env.PORT,
   idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 2000,
   max: 100,
