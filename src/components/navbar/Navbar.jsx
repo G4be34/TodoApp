@@ -47,7 +47,7 @@ const Navbar = () => {
           <Link key={link.id} href={link.url} className={styles.link}>{link.title}</Link>
         ))}
         {session.status === "authenticated"
-          ? <Link href={"/"}><button className={styles.button} onClick={handleLogout}>Logout</button></Link>
+          ? <Link href={"todo/login"}><button className={styles.button} onClick={handleLogout}>Logout</button></Link>
           : <Link href={"todo/login"}><button className={styles.button} >Login</button></Link>}
       </div>
     </div>

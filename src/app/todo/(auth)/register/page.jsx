@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const Register = () => {
   const [matchPws, setMatchPws] = useState(true);
   const [error, setError] = useState(false);
+  const [existingUser, setExistingUser] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
@@ -34,7 +35,10 @@ const Register = () => {
             password
           })
         });
-
+        if (res.status === 409) {
+          setExistingUser(true);
+          return;
+        }
         res.status === 201 && router.push("/todo/login?success=Account has been created");
       } catch (error) {
         setError(true);
@@ -51,6 +55,7 @@ const Register = () => {
         <input type="email" placeholder="Email" className={styles.input} required />
         <input type="password" placeholder="Password" className={styles.input} required />
         <input type="password" placeholder="Confirm Password" className={styles.input} required />
+        {existingUser && <p className={styles.error}>Email already exists</p>}
         {!matchPws && <p className={styles.error}>Passwords do not match</p>}
         <button className={styles.button}>Register</button>
       </form>

@@ -68,8 +68,14 @@ const TodoItem = ({ todo, mutate }) => {
     }
   };
 
+  const closeMenu = () => {
+    if (showMenu) {
+      setShowMenu(false);
+    }
+  }
+
   return (
-    <li className={styles.container}>
+    <li className={styles.container} onClick={closeMenu}>
       {editMode
         ? <div className={styles.editContainer}>
             <input className={styles.input} type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} />

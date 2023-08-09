@@ -16,6 +16,7 @@ const Todo = () => {
   const [completed, setCompleted] = useState([]);
   const [sort, setSort] = useState("newest");
   const [sortCompleted, setSortCompleted] = useState("date completed");
+  const [showMenu, setShowMenu] = useState(false);
 
   const fetcher = (...args) => fetch(...args).then(res => res.json());
 
@@ -109,7 +110,7 @@ const Todo = () => {
 
   if (session.status === "authenticated") {
     return (
-      <div className={styles.mainContainer}>
+      <div className={styles.mainContainer} >
         <form onSubmit={handleAdd} className={styles.form}>
           <input type="text" placeholder="Add a new Todo" className={styles.input} />
           <button className={styles.button}>Add</button>
@@ -129,7 +130,12 @@ const Todo = () => {
               </div>
             </div>
             <ul className={styles.listContainer}>
-              {todos?.map(todo => <TodoItem key={todo.id} todo={todo} mutate={mutate} />)}
+              {todos?.map(todo =>
+                <TodoItem
+                  key={todo.id}
+                  todo={todo}
+                  mutate={mutate}
+                  />)}
             </ul>
           </div>
           <div className={styles.completed}>
