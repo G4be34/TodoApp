@@ -1,12 +1,13 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import styles from "./page.module.css"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 
 const Login = () => {
+  const [badLogin, setBadLogin] = useState(false);
   const session = useSession();
   const router = useRouter();
 
@@ -21,13 +22,17 @@ const Login = () => {
   }
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
 
-    console.log("Login attempt with: ", email, password);
-    signIn("credentials", { email, password });
+    try {
+      await signIn("credentials", { email, password });
+    } catch (error) {
+      setBadLogin(true);
+      console.log("Error sigining in: ", error);
+    }
   }
 
   return (
