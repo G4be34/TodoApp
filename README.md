@@ -54,14 +54,14 @@ Run `npm run dev` to start the development server.
 ## Sample .env File
 
 ```
-PORT=3000
-DB_HOST=localhost
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
+DB_PORT=5432
+HOST=your_database_host
+USER=your_database_user
+PASSWORD=your_database_password
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=http://your_db_host_and_port
 ```
 
 ## Authors & Contributors
