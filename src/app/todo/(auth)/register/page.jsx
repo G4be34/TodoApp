@@ -21,7 +21,6 @@ const Register = () => {
 
     if (password !== confirmPw) {
       setMatchPws(false);
-      console.log(`Passwords do not match. Password: ${password}, Confirm PW: ${confirmPw}`);
     } else {
       try {
         const res = await fetch("/api/auth/register", {

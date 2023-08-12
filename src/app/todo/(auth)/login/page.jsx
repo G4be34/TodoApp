@@ -31,14 +31,13 @@ const Login = () => {
       await signIn("credentials", { email, password });
     } catch (error) {
       setBadLogin(true);
-      console.log("Error sigining in: ", error);
     }
   }
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Login to Todo</h1>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
         <input type="email" placeholder="Email" className={styles.input} required/>
         <input type="password" placeholder="Password" className={styles.input} required/>
         <button className={styles.button}>Login</button>
