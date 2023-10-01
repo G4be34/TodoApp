@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import pool from "@/utils/db";
+import pool from "@/src/utils/db";
 import { format } from "date-fns";
 
 export const GET = async (request) => {
