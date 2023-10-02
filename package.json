@@ -25,6 +25,7 @@
     "typescript": "^5.2.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.4",
     "@types/pg": "^8.10.3"
   }
 }

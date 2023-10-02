@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import pool from "@/utils/db";
+import pool from "@/src/utils/db";
+import { getErrorMessage } from "@/lib/utils";
 
-export const POST = async (request) => {
+export const POST = async (request: Request) => {
   const { name, email, password} = await request.json();
 
   const hashedPassword = await bcrypt.hash(password, 5);
@@ -23,8 +24,9 @@ export const POST = async (request) => {
     return new NextResponse("User has been created", {
       status: 201
     });
-  } catch (error) {
-    return new NextResponse(error.message, {
+  } catch (error: unknown) {
+    const errMessage = getErrorMessage(error)
+    return new NextResponse(errMessage, {
       status: 500
     });
   }

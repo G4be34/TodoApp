@@ -11,13 +11,13 @@ const Register = () => {
   const [existingUser, setExistingUser] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const name = e.target[0].value;
-    const email = e.target[1].value;
-    const password = e.target[2].value;
-    const confirmPw = e.target[3].value;
+    const name = (e.currentTarget[0] as HTMLInputElement).value;
+    const email = (e.currentTarget[1] as HTMLInputElement).value;
+    const password = (e.currentTarget[2] as HTMLInputElement).value;
+    const confirmPw = (e.currentTarget[3] as HTMLInputElement).value;
 
     if (password !== confirmPw) {
       setMatchPws(false);

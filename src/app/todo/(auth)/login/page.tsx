@@ -22,10 +22,10 @@ const Login = () => {
   }
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
+    const email = (e.currentTarget[0] as HTMLInputElement).value;
+    const password = (e.currentTarget[1] as HTMLInputElement).value;
 
     try {
       await signIn("credentials", { email, password });
