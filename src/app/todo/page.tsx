@@ -7,14 +7,7 @@ import useSWR from 'swr';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-
-type Todo = {
-  id: number,
-  date_created: string,
-  todo_body: string,
-  important: boolean,
-  completed_date: string
-}
+import { Todo } from "@/lib/types";
 
 
 const Todo = () => {

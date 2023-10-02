@@ -3,9 +3,11 @@
 import React, { useState } from "react"
 import styles from "./todoItem.module.css"
 import { MutatorCallback } from "swr"
+import { Todo } from "@/lib/types"
+
 
 type TodoItemProps = {
-  todo: object,
+  todo: Todo,
   mutate: MutatorCallback
 }
 
