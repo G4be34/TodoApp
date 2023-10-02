@@ -19,7 +19,7 @@ const Contact = () => {
         <form className={styles.form}>
           <input type="text" placeholder="Name" className={styles.input} />
           <input type="text" placeholder="Email" className={styles.input} />
-          <textarea className={styles.textArea} placeholder="Message" cols="30" rows={10}></textarea>
+          <textarea className={styles.textArea} placeholder="Message" cols={30} rows={10}></textarea>
           <Link href="#">
             <button className={styles.button}>Send</button>
           </Link>
