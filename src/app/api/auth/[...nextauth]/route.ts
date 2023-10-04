@@ -1,19 +1,24 @@
 import NextAuth from "next-auth/next"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-import pool from "@/utils/db"
+import pool from "@/src/utils/db"
 import bcrypt from "bcryptjs"
+import { getErrorMessage } from "@/lib/utils"
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }),
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
       async authorize(credentials) {
+        if (!credentials) {
+          throw new Error("Credentials cannot be found");
+        }
+
         try {
           const query = "SELECT * FROM users WHERE email = $1;";
           const value = [credentials.email];
@@ -33,8 +38,13 @@ const handler = NextAuth({
             throw new Error("User not found");
           }
         } catch(error) {
-          throw new Error(error);
+          const errMessage = getErrorMessage(error);
+          throw new Error(errMessage);
         }
+      },
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
       }
     })
   ],
