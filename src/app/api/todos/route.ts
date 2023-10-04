@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import pool from "@/utils/db";
+import pool from "@/src/utils/db";
 import { format } from "date-fns";
 
-export const GET = async (request) => {
+export const GET = async (request: Request) => {
   const url = new URL(request.url);
   const username = url.searchParams.get("username");
 
@@ -18,7 +18,7 @@ export const GET = async (request) => {
   }
 };
 
-export const POST = async (request) => {
+export const POST = async (request: Request) => {
   const {newTodo, username } = await request.json();
   const query = "INSERT INTO todos (completed_date, todo_body, important, username) VALUES ($1, $2, $3, $4);";
   const values = [null, newTodo, false, username];
@@ -31,7 +31,7 @@ export const POST = async (request) => {
   }
 };
 
-export const DELETE = async (request) => {
+export const DELETE = async (request: Request) => {
   const url = new URL(request.url);
   const id = url.searchParams.get("id");
   const query = "DELETE FROM todos WHERE id = $1;";
@@ -45,10 +45,10 @@ export const DELETE = async (request) => {
   }
 };
 
-export const PATCH = async (request) => {
+export const PATCH = async (request: Request) => {
   const url = new URL(request.url);
   const id = url.searchParams.get("id");
-  let importance = url.searchParams.get("importance");
+  let importance: string | boolean | null = url.searchParams.get("importance");
   const completedDate = url.searchParams.get("completed");
   const newTodoBody = url.searchParams.get("body");
   let query;

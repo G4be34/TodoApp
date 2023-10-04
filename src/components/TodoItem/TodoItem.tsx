@@ -2,8 +2,16 @@
 
 import React, { useState } from "react"
 import styles from "./todoItem.module.css"
+import { MutatorCallback } from "swr"
+import { Todo } from "@/lib/types"
 
-const TodoItem = ({ todo, mutate }) => {
+
+type TodoItemProps = {
+  todo: Todo,
+  mutate: MutatorCallback
+}
+
+const TodoItem = ({ todo, mutate }: TodoItemProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [newTodo, setNewTodo] = useState(todo.todo_body);

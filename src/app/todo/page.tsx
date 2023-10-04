@@ -2,41 +2,43 @@
 
 import React, { useEffect, useMemo, useState } from "react"
 import styles from "./page.module.css"
-import TodoItem from "@/components/TodoItem/TodoItem";
+import TodoItem from "@/src/components/TodoItem/TodoItem";
 import useSWR from 'swr';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { Todo } from "@/lib/types";
 
 
 const Todo = () => {
   const session = useSession();
   const router = useRouter();
-  const [todos, setTodos] = useState([]);
-  const [completed, setCompleted] = useState([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [completed, setCompleted] = useState<Todo[]>([]);
   const [sort, setSort] = useState("newest");
   const [sortCompleted, setSortCompleted] = useState("date completed");
   const [showMenu, setShowMenu] = useState(false);
 
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (...args: [RequestInfo]) => fetch(...args).then(res => res.json());
 
-  const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${session?.data?.user.name}`, fetcher);
+  const username = session.data?.user?.name;
 
-  const formatDate = (dateString) => {
+  const { data, mutate, error, isLoading } = useSWR(`/api/todos?username=${username}`, fetcher);
+
+  const formatDate = (dateString: string): string => {
     const parsedDate = Date.parse(dateString);
-    if (!isNaN(parsedDate)) {
-      return format(new Date(dateString), "yyyy-MM-dd");
-    }
+
+    return format(new Date(dateString), "yyyy-MM-dd");
   };
 
   useEffect(() => {
     if (data) {
-      const todosList = data.filter(item => {
+      const todosList = data.filter((item: Todo) => {
         const newDate = formatDate(item.date_created);
         item.date_created = newDate;
         return !item.completed_date;
       });
-      const completedList = data.filter(item => {
+      const completedList = data.filter((item: Todo) => {
         const newDate = formatDate(item.completed_date);
         item.completed_date = newDate;
         return item.completed_date;
@@ -57,39 +59,39 @@ const Todo = () => {
     return <p>Loading...</p>
   }
 
-  const sortTodosList = (e) => {
+  const sortTodosList = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const mode = e.target.value;
     let newList = [...todos];
     if (mode === "newest") {
-      newList.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+      newList.sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
     }
     if (mode === "oldest") {
-      newList.sort((a, b) => new Date(a.date_created) - new Date(b.date_created));
+      newList.sort((a, b) => new Date(a.date_created).getTime() - new Date(b.date_created).getTime());
     }
     if (mode === "importance") {
-      newList.sort((a, b) => b.important - a.important);
+      newList.sort((a, b) => (b.important ? 1 : 0) - (a.important ? 1 : 0));
     }
     setTodos(newList);
   }
 
-  const sortCompletedList = (e) => {
+  const sortCompletedList = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const mode = e.target.value;
     let newList = [...completed];
 
     if (mode === "date completed") {
-      newList.sort((a, b) => new Date(b.completed_date) - new Date(a.completed_date));
+      newList.sort((a: Todo, b: Todo) => new Date(b.completed_date).getTime() - new Date(a.completed_date).getTime());
     }
     if (mode === "date added") {
-      newList.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+      newList.sort((a: Todo, b: Todo) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime());
     }
 
     setCompleted(newList);
   };
 
-  const handleAdd = async (e) => {
+  const handleAdd = async (e: React.FormEvent<HTMLFormElement> ) => {
     e.preventDefault();
 
-    const newTodo = e.target[0].value;
+    const newTodo = (e.currentTarget[0] as HTMLInputElement).value;
     try {
       await fetch("/api/todos", {
         method: "POST",
@@ -98,11 +100,11 @@ const Todo = () => {
         },
         body: JSON.stringify({
           newTodo,
-          username: session.data.user.name
+          username: username
         })
       });
       mutate()
-      e.target.reset();
+      e.currentTarget.reset();
     } catch (error) {
       console.log("Error adding new todo: ", error);
     }
@@ -112,7 +114,7 @@ const Todo = () => {
     return (
       <div className={styles.mainContainer} >
         <form onSubmit={handleAdd} className={styles.form}>
-          <input type="text" placeholder="Add a new Todo" className={styles.input} />
+          <input type="text" placeholder="Add a new Todo" className={styles.input} name="newTodo" />
           <button className={styles.button}>Add</button>
         </form>
         <div className={styles.container}>
@@ -151,7 +153,7 @@ const Todo = () => {
               </div>
             </div>
             <ul className={styles.listContainer}>
-              {completed?.map(todo => <TodoItem key={todo.id} todo={todo} />)}
+              {completed?.map(todo => <TodoItem key={todo.id} todo={todo} mutate={mutate}/>)}
             </ul>
           </div>
         </div>
